@@ -2,11 +2,7 @@ import React from "react"
 import {
   Box,
   Heading,
-  AspectRatio,
-  Image,
   Text,
-  Center,
-  HStack,
   Stack,
 } from "native-base"
 
@@ -31,6 +27,7 @@ export default function CardClass({ name, location, startDate, endDate }) {
       }}
     >
       <Stack p="4" space={3}>
+
         <Stack space={2}>
           <Heading size="md">
             {name}
