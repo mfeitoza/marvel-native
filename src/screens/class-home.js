@@ -6,14 +6,12 @@ import {
   Heading,
 } from 'native-base';
 
-import Layout from './layout'
-
 import ListItem from '../components/list-item'
 
 export default function ClassHome() {
 
   return (
-    <Layout>
+    <Box px={4} pt={4}>
       <Stack space={4} direction="column">
         <Heading
           size="xl"
@@ -30,6 +28,6 @@ export default function ClassHome() {
         <ListItem label="Inicio" value="2021-09-20" />
         <ListItem label="Fim" value="2021-11-20" />
       </Stack>
-    </Layout>
+    </Box>
   )
 }
