@@ -48,6 +48,7 @@ export default function App() {
             ...prevState,
             isSignout: true,
             userToken: null,
+            isLoading: false,
           };
         case 'SET_USER_INFO':
           return {
@@ -67,14 +68,8 @@ export default function App() {
 
   React.useEffect(() => {
     const bootstrapAsync = async () => {
-      let userToken;
-
-      try {
-        userToken = await AsyncStorage.getItem('USER_TOKEN');
-        authContext.getUserByToken(userToken);
-      } catch (e) {
-        console.log(e);
-      }
+      let userToken = await AsyncStorage.getItem('USER_TOKEN');
+      authContext.getUserByToken(userToken);
     };
 
     bootstrapAsync();
@@ -84,14 +79,19 @@ export default function App() {
     () => ({
       signIn: async (token) => {
         await AsyncStorage.setItem('USER_TOKEN', token);
+        const res = await getUserInfo(token);
+        dispatch({ type: 'SET_USER_INFO', user: res.data });
         dispatch({ type: 'SIGN_IN', token });
       },
       signOut: () => dispatch({ type: 'SIGN_OUT' }),
       getUserByToken: async (token) => {
-        const res = await getUserInfo(token);
-
-        dispatch({ type: 'SET_USER_INFO', user: res.data });
-        dispatch({ type: 'RESTORE_TOKEN', token });
+        try {
+          const res = await getUserInfo(token);
+          dispatch({ type: 'SET_USER_INFO', user: res.data });
+          dispatch({ type: 'RESTORE_TOKEN', token });
+        } catch (e) {
+          dispatch({ type: 'SIGN_OUT' })
+        }
       }
     }),
     []
