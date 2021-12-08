@@ -10,7 +10,6 @@ import {
 import Layout from './layout'
 
 import ListItem from '../components/list-item'
-import Navigation from '../components/navigation'
 
 import { AuthContext } from '../contexts';
 
