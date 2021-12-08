@@ -4,6 +4,7 @@ import {
   Box,
   Stack,
   Heading,
+  Button,
 } from 'native-base';
 
 import Layout from './layout'
@@ -11,7 +12,12 @@ import Layout from './layout'
 import ListItem from '../components/list-item'
 import Navigation from '../components/navigation'
 
+import { AuthContext } from '../contexts';
+
 export default function Profile() {
+
+  const { state, signOut } = React.useContext(AuthContext);
+  const user = state.user;
 
   return (
     <Layout>
@@ -24,13 +30,17 @@ export default function Profile() {
               color: "warmGray.50",
             }}
           >
-            Olá Marcus!
+            Olá, {user.name}!
           </Heading>
-          <ListItem label="Nome" value="Marcus Feitoza" />
-          <ListItem label="Email" value="test@gmail.com" />
-          <ListItem label="Telefone" value="22 99888-8880" />
-          <ListItem label="Sexo" value="Masculino" />
+          <ListItem label="Nome" value={user.name} />
+          <ListItem label="Email" value={user.email} />
+          <ListItem label="Telefone" value={user.phone} />
+          <ListItem label="Sexo" value={user.gender === 'male' ? 'Masculino' : 'Feminino'} />
         </Stack>
+
+        <Button mt="4" colorScheme="primary" onPress={() => signOut() }>
+          Sair
+        </Button>
     </Layout>
   )
 }
