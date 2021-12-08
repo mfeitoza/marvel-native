@@ -7,3 +7,9 @@ export const logIn = async (email, password) => {
     email, password
   })
 }
+
+export const getUserInfo = async (jwt) => {
+  return await axios.get(`${BASE_URL}/user-info`, {
+    headers: { Authorization: `Bearer ${jwt}` }
+  })
+}
