@@ -8,12 +8,12 @@ import {
 } from "native-base";
 import { useNavigation } from '@react-navigation/native';
 
-export default function CardClass({ name, location, startDate, endDate }) {
+export default function CardClass({ id, name, location, startDate, endDate }) {
 
   const navigation = useNavigation();
 
   return (
-    <Pressable onPress={() => navigation.navigate('ClassHome')}>
+    <Pressable onPress={() => navigation.navigate('ClassHome', { id })}>
       <Box
         w="100%"
         rounded="lg"
