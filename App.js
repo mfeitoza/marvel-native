@@ -90,8 +90,8 @@ export default function App() {
       getUserByToken: async (token) => {
         const res = await getUserInfo(token);
 
-        dispatch({ type: 'RESTORE_TOKEN', token });
         dispatch({ type: 'SET_USER_INFO', user: res.data });
+        dispatch({ type: 'RESTORE_TOKEN', token });
       }
     }),
     []
