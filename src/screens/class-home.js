@@ -6,9 +6,22 @@ import {
   Heading,
 } from 'native-base';
 
+import { useRoute } from '@react-navigation/native';
+
 import ListItem from '../components/list-item'
 
+import { AuthContext } from '../contexts';
+
+
+
 export default function ClassHome() {
+
+  const route = useRoute();
+  const { state } = React.useContext(AuthContext);
+  const id = route.params.id;
+  const enrollment = state.user.enrollments.find(enrollment => enrollment.id === id);
+
+  console.log(enrollment)
 
   return (
     <Box px={4} pt={4}>
@@ -21,12 +34,12 @@ export default function ClassHome() {
             color: "warmGray.50",
           }}
         >
-          Banco de dados
+          {enrollment.course.course.name}
         </Heading>
-        <ListItem label="Nome" value="Banco de dados 2" />
-        <ListItem label="Professor" value="Marcus Feitoza" />
-        <ListItem label="Inicio" value="2021-09-20" />
-        <ListItem label="Fim" value="2021-11-20" />
+        <ListItem label="Nome" value={enrollment.course.course.name} />
+        <ListItem label="Professor" value={enrollment.course.professor.name} />
+        <ListItem label="Inicio" value={new Date(enrollment.course.startDate).toLocaleDateString()} />
+        <ListItem label="Fim" value={new Date(enrollment.course.endDate).toLocaleDateString()} />
       </Stack>
     </Box>
   )
