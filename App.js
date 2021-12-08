@@ -10,8 +10,11 @@ import LoginScreen from './src/screens/login';
 import HomeScreen from './src/screens/home';
 import ClassHomeScreen from './src/screens/class-home';
 import ProfileScreen from './src/screens/profile';
+import SplashScreen from './src/screens/splash';
 
 import { AuthContext } from './src/contexts';
+
+import { getUserInfo } from './src/api';
 
 const Stack = createNativeStackNavigator();
 
@@ -46,9 +49,16 @@ export default function App() {
             isSignout: true,
             userToken: null,
           };
+        case 'SET_USER_INFO':
+          return {
+            ...prevState,
+            isSignout: false,
+            user: action.user,
+          };
       }
     },
     {
+      user: null,
       isLoading: true,
       isSignout: false,
       userToken: null,
@@ -56,17 +66,15 @@ export default function App() {
   );
 
   React.useEffect(() => {
-
     const bootstrapAsync = async () => {
       let userToken;
 
       try {
         userToken = await AsyncStorage.getItem('USER_TOKEN');
+        authContext.getUserByToken(userToken);
       } catch (e) {
         console.log(e);
       }
-
-      dispatch({ type: 'RESTORE_TOKEN', token: userToken });
     };
 
     bootstrapAsync();
@@ -75,15 +83,27 @@ export default function App() {
   const authContext = React.useMemo(
     () => ({
       signIn: async (token) => {
+        await AsyncStorage.setItem('USER_TOKEN', token);
         dispatch({ type: 'SIGN_IN', token });
       },
-      signOut: () => dispatch({ type: 'SIGN_OUT' })
+      signOut: () => dispatch({ type: 'SIGN_OUT' }),
+      getUserByToken: async (token) => {
+        const res = await getUserInfo(token);
+
+        dispatch({ type: 'RESTORE_TOKEN', token });
+        dispatch({ type: 'SET_USER_INFO', user: res.data });
+      }
     }),
     []
   );
 
+  if (authState.isLoading) {
+    // We haven't finished checking for the token yet
+    return <SplashScreen />;
+  }
+
   return (
-    <AuthContext.Provider value={authContext}>
+    <AuthContext.Provider value={{...authContext, state: authState}}>
       <NativeBaseProvider>
         <NavigationContainer theme={MyTheme}>
           <Stack.Navigator>
